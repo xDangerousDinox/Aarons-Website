@@ -1,0 +1,19 @@
+{
+  "name": "aarons-website",
+  "version": "1.0.0",
+  "description": "Cool ai en stuff",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xDangerousDinox/Aarons-Website.git"
+  },
+  "author": "Aaron",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xDangerousDinox/Aarons-Website/issues"
+  },
+  "homepage": "https://github.com/xDangerousDinox/Aarons-Website#readme"
+}
