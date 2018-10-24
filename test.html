@@ -28,12 +28,7 @@
 <form id="form">
   <label for="eq">Enter an equation:</label>
   <input type="text" id="eq" value="4 * sin(x) + 5 * cos(x/2)" />
-  <input type="submit" value="Draw" />
-</form>
-
-<form id="form2">
-  <label for="eq">Enter an equation:</label>
-  <input type="text" id="eq2" value="4 * sin(x) + 5 * cos(x/2)" />
+  <input type="text" id="eq2" value="x" />
   <input type="submit" value="Draw" />
 </form>
 
@@ -68,7 +63,7 @@
       // evaluate the expression repeatedly for different values of x
       const xValues2 = math.range(-10, 10, 0.01).toArray()
       const yValues2 = xValues.map(function (x) {
-        return expr.eval({x: x})
+        return expr2.eval({x: x})
       })
 
       // render the plot using plotly

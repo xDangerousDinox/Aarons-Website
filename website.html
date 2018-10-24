@@ -1,20 +1,102 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>World population</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-  </head>
-  <body>
-    <div class="wrapper">
-      <h1>World population over time</h1>
-      <h2>Number of people (in millions) living on earth, the last 500 years</h2>
+<head>
+  <title>math.js | plot</title>
+  <script src="https://unpkg.com/mathjs@5.2.2/dist/math.min.js"></script>
 
-<canvas id="myChart" width="1600" height="900"></canvas>
+  <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
 
-    </div>
+  <style>
+    input[type=text] {
+      width: 300px;
+    }
+    input {
+      padding: 6px;
+    }
+    body, html, input {
+      font-family: sans-serif;
+      font-size: 11pt;
 
-    <script src="script.js"></script>
-  </body>
+    }
+    form {
+      margin: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<form id="form">
+  <label for="points">Enter points correlating to a line:</label>
+  <input type="text" id="eq" value="0 5 1 10 2 15" />
+  <input type="submit" value="Begin Genetic Algorithm" />
+</form>
+
+<div id="plot"></div>
+
+<script>
+
+function draw() {
+    try {
+      // compile the expression once
+      const expression = document.getElementById('eq').value
+      const expr = math.compile(expression)
+
+      // evaluate the expression repeatedly for different values of x
+      const xValues = math.range(-10, 10, 0.01).toArray()
+      const yValues = xValues.map(function (x) {
+        return expr.eval({x: x})
+      })
+
+      // render the plot using plotly
+      const trace1 = {
+        x: xValues,
+        y: yValues,
+        type: 'scatter'
+      }
+      const data = [trace1]
+      Plotly.newPlot('plot', data)
+     }
+     catch (err) {
+	console.error(err)
+	alert(err)
+     }
+}
+
+function runalgorithm() {
+	var plot = document.getElementById('eq').value.split(" ")
+	var rplot = new Array(plot.length / 2]
+	for (i = 0; i < plot.length; i+=2) {
+		var temparr = [plot[i], plot[i + 1]]
+		rplot[i / 2] = temparr
+	}
+	geneticalgorithm(10, rplot, 32, 0.5)
+		
+}
+
+function geneticalgorithm(generations, plot, popsize, mutationchance) {
+	var cohort = new Array(popsize);
+	for (i = 0; i < popsize; i++) {
+		var genes = [ Math.random() * 11 , Math.random() * 11, 0]
+		cohort[i] = genes
+	}
+	//run generations
+	for (i = 0; i < generations; i++) {
+		cohort = runGeneration(cohort)
+	}
+}
+
+function runGeneration(cohort) {
+	nextCohort = new Array(cohort.length)
+	for (i = 0; i < cohort.length; i++)
+		cohort[i]
+}
+
+	document.getElementById('form').onsubmit = function (event){
+		event.preventDefault()
+		runalgorithm()
+		draw()
+	}
+</script>
+
+</body>
 </html>
-
