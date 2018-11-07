@@ -60,6 +60,11 @@ function draw() {
 	console.error(err)
 	alert(err)
      }
+
+}
+
+function draw(cohort) {
+	
 }
 
 function runalgorithm() {
@@ -87,8 +92,15 @@ function geneticalgorithm(generations, plot, popsize, mutationchance) {
 	}
 	//run generations
 	for (i = 0; i < generations; i++) {
-		cohort = runGeneration(cohort)
+		cohort = runGeneration(cohort, mutationchance)
+		draw(cohort)
 	}
+	for (i = 0; i < cohort.length; i++) }
+		cohort[i].fitnessScore = fitnessScore(cohort[i])
+	}
+	cohort.sort(function(a, b) {
+		return a.fitnessScore = b.fitnessScore})
+	bestGenes = cohort[0].genes
 }
 
 function fitnessScore(o) {
@@ -99,7 +111,7 @@ function fitnessScore(o) {
 	return score
 }
 
-function runGeneration(cohort) {
+function runGeneration(cohort, mutationchance) {
 	nextCohort = new Array(cohort.length)
 	for (i = 0; i < cohort.length; i++)
 		cohort[i].fitnessScore = fitnessScore(cohort[i])
@@ -107,8 +119,41 @@ function runGeneration(cohort) {
 	cohort.sort(function(a, b) {
 		return a.fitnessScore - b.fitnessScore})
 	for (i = 0; i < cohort.length / 2; i += 2) {
-		Organism[] children = breed(cohort[i]
+		Organism[] children = breed(cohort[i], cohort[i + 1], mutationchance)
+		nextCohort[i * 2] = children[0]
+		nextCohort[i * 2 + 1] = children[1]
+		nextCohort[i * 2 + 2] = children[2]
+		nextCohort[i * 2 + 3] = children[3]
+		nextCohort[i * 2 + 4] = children[4]
 	}
+	return nextCohort
+}
+
+function breed(parent1, parent2, mutationchance) {
+	var children = new Array(4)
+	for (i = 0; i < 4; i++) {	
+		var genes = new Array(2)
+		genes[0] = (parent1.genes[0] + parent2.genes[0]) / 2
+		var random = Math.random()
+		if (random < mutationchance) {
+			if (Math.random() < random / 2) {
+				genes[0] = Math.round(genes[0] * 1.25)
+			} else {
+				genes[0] = Math.round(genes[0] * 0.75)
+			}
+		}	
+		genes[1] = (parent1.genes[1] + parent2.genes[1]) / 2
+		random = Math.random()
+		if (random < mutationchance) {
+			if (Math.random() < random / 2) {
+				genes[1] = Math.round(genes[1] * 1.25)
+			} else {
+				genes[1] = Math.round(genes[1] * 0.75)
+			}
+		}
+		children[i].genes = genes
+	}
+	return children	
 }
 
 	document.getElementById('form').onsubmit = function (event){
