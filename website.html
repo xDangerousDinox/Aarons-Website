@@ -63,6 +63,11 @@ function draw() {
 }
 
 function runalgorithm() {
+//	var tobj = {}
+//	tobj.genes = 
+//	tobj.somethingelse = 
+//        var tobjar = []
+//        tobjarr.append(tobj
 	var plot = document.getElementById('eq').value.split(" ")
 	var rplot = new Array(plot.length / 2]
 	for (i = 0; i < plot.length; i+=2) {
@@ -78,6 +83,7 @@ function geneticalgorithm(generations, plot, popsize, mutationchance) {
 	for (i = 0; i < popsize; i++) {
 		var genes = [ Math.random() * 11 , Math.random() * 11, 0]
 		cohort[i] = genes
+		genes.fitnessScore = 0
 	}
 	//run generations
 	for (i = 0; i < generations; i++) {
@@ -85,10 +91,24 @@ function geneticalgorithm(generations, plot, popsize, mutationchance) {
 	}
 }
 
+function fitnessScore(o) {
+	var score = 0
+	for (i = 0; i < plot.length; i++) {
+		score += Math.abs(o[0] * plot[i][0] + o[1] - plot[i][1])
+	}
+	return score
+}
+
 function runGeneration(cohort) {
 	nextCohort = new Array(cohort.length)
 	for (i = 0; i < cohort.length; i++)
-		cohort[i]
+		cohort[i].fitnessScore = fitnessScore(cohort[i])
+	}
+	cohort.sort(function(a, b) {
+		return a.fitnessScore - b.fitnessScore})
+	for (i = 0; i < cohort.length / 2; i += 2) {
+		Organism[] children = breed(cohort[i]
+	}
 }
 
 	document.getElementById('form').onsubmit = function (event){
