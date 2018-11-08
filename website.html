@@ -65,9 +65,9 @@
 
 function draw(cohort) {
 	try {
-		const data = new Array(cohort.length)
-		for (i = 0; i < cohort.length; i++) {
-			const expression = cohort[i].genes[0] + "x+" + cohort[i].genes[1]
+		const data = new Array(cohort.length - 1)
+		for (var i = 0; i < cohort.length - 1; i++) {
+			const expression = cohort[i][0] + "x+" + cohort[i][1]
 			const expr = math.compile(expression)
 			const xValues = math.range(-10, 10, 0.01).toArray()
 			const yValues = xValues.map(function (x) {
@@ -95,50 +95,52 @@ function runalgorithm() {
 //        tobjarr.append(tobj
 	var plot = document.getElementById('eq').value.split(" ")
 	var rplot = new Array(plot.length / 2)
-	for (i = 0; i < plot.length; i+=2) {
+	for (var i = 0; i < plot.length; i+=2) {
 		var temparr = [plot[i], plot[i + 1]]
 		rplot[i / 2] = temparr
 	}
-	geneticalgorithm(10, rplot, 32, 0.5)
+	geneticalgorithm(3, rplot, 4, 0.5)
 		
 }
 
+
+
 function geneticalgorithm(generations, plot, popsize, mutationchance) {
 	var cohort = new Array(popsize);
-	for (i = 0; i < popsize; i++) {
+	for (var i = 0; i < popsize; i++) {
 		var genes = [ Math.random() * 11 , Math.random() * 11, 0]
 		cohort[i] = genes
 		genes.fitnessScore = 0
 	}
 	//run generations
-	for (i = 0; i < generations; i++) {
-		cohort = runGeneration(cohort, mutationchance)
+	for (var i = 0; i < generations; i++) {
+		cohort = runGeneration(cohort, mutationchance, plot)
 		draw(cohort)
 	}
-	for (i = 0; i < cohort.length; i++) {
-		cohort[i].fitnessScore = fitnessScore(cohort[i])
+	for (var i = 0; i < cohort.length - 1; i++) {
+		cohort[i].fitnessScore = fitnessScore(cohort[i], plot)
 	}
 	cohort.sort(function(a, b) {
 		return a.fitnessScore = b.fitnessScore})
 	bestGenes = cohort[0].genes
 }
 
-function fitnessScore(o) {
+function fitnessScore(o, plot) {
 	var score = 0
-	for (i = 0; i < plot.length; i++) {
+	for (var i = 0; i < plot.length; i++) {
 		score += Math.abs(o[0] * plot[i][0] + o[1] - plot[i][1])
 	}
 	return score
 }
 
-function runGeneration(cohort, mutationchance) {
+function runGeneration(cohort, mutationchance, plot) {
 	nextCohort = new Array(cohort.length)
-	for (i = 0; i < cohort.length; i++)
-		cohort[i].fitnessScore = fitnessScore(cohort[i])
+	for (var i = 0; i < cohort.length; i++) {
+		cohort[i].fitnessScore = fitnessScore(cohort[i], plot)
 	}
 	cohort.sort(function(a, b) {
 		return a.fitnessScore - b.fitnessScore})
-	for (i = 0; i < cohort.length / 2; i += 2) {
+	for (var i = 0; i < cohort.length / 2; i += 2) {
 		var children = breed(cohort[i], cohort[i + 1], mutationchance)
 		nextCohort[i * 2] = children[0]
 		nextCohort[i * 2 + 1] = children[1]
@@ -151,9 +153,9 @@ function runGeneration(cohort, mutationchance) {
 
 function breed(parent1, parent2, mutationchance) {
 	var children = new Array(4)
-	for (i = 0; i < 4; i++) {	
+	for (var i = 0; i < 4; i++) {	
 		var genes = new Array(2)
-		genes[0] = (parent1.genes[0] + parent2.genes[0]) / 2
+		genes[0] = (parent1[0] + parent2[0]) / 2
 		var random = Math.random()
 		if (random < mutationchance) {
 			if (Math.random() < random / 2) {
@@ -162,7 +164,7 @@ function breed(parent1, parent2, mutationchance) {
 				genes[0] = Math.round(genes[0] * 0.75)
 			}
 		}	
-		genes[1] = (parent1.genes[1] + parent2.genes[1]) / 2
+		genes[1] = (parent1[1] + parent2[1]) / 2
 		random = Math.random()
 		if (random < mutationchance) {
 			if (Math.random() < random / 2) {
@@ -171,7 +173,8 @@ function breed(parent1, parent2, mutationchance) {
 				genes[1] = Math.round(genes[1] * 0.75)
 			}
 		}
-		children[i].genes = genes
+		children[i] = genes
+		genes.fitnessScore = 0
 	}
 	return children	
 }
