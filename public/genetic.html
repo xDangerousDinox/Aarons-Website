@@ -65,8 +65,8 @@
 
 function draw(cohort) {
 	try {
-		const data = new Array(cohort.length - 1)
-		for (var i = 0; i < cohort.length - 1; i++) {
+		const data = new Array(cohort.length)
+		for (var i = 0; i < cohort.length; i++) {
 			const expression = cohort[i][0] + "x+" + cohort[i][1]
 			const expr = math.compile(expression)
 			const xValues = math.range(-10, 10, 0.01).toArray()
@@ -79,7 +79,8 @@ function draw(cohort) {
 			}
 			data[i] = trace
 		}
-		Plotly.newPlot('plot', data)
+		Plotly.react('plot', data)
+		wait(2000)
 	}
 	catch (err) {
 		console.error(err)
@@ -125,6 +126,14 @@ function geneticalgorithm(generations, plot, popsize, mutationchance) {
 	bestGenes = cohort[0].genes
 }
 
+function wait(ms)
+{
+var d = new Date()
+var d2 = null
+do { d2 = new Date() }
+while(d2-d < ms)
+}		
+
 function fitnessScore(o, plot) {
 	var score = 0
 	for (var i = 0; i < plot.length; i++) {
@@ -146,7 +155,6 @@ function runGeneration(cohort, mutationchance, plot) {
 		nextCohort[i * 2 + 1] = children[1]
 		nextCohort[i * 2 + 2] = children[2]
 		nextCohort[i * 2 + 3] = children[3]
-		nextCohort[i * 2 + 4] = children[4]
 	}
 	return nextCohort
 }
@@ -180,9 +188,9 @@ function breed(parent1, parent2, mutationchance) {
 }
 
 	document.getElementById('form').onsubmit = function (event){
+		Plotly.newPlot('plot', null)
 		event.preventDefault()
 		runalgorithm()
-		draw()
 	}
 </script>
 
