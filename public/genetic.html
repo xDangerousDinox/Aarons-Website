@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>math.js | plot</title>
-  <script src="https://unpkg.com/mathjs@5.2.2/dist/math.min.js"></script>
+	<title>math.js | plot</title>
+	<script src="https://unpkg.com/mathjs@5.2.2/dist/math.min.js"></script>
 
-  <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
+	<script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
 
-  <style>
-    input[type=text] {
+	<style>
+		input[type=text] {
       width: 300px;
     }
     input {
@@ -23,176 +24,237 @@
     }
   </style>
 </head>
+
 <body>
 
-<form id="form">
-  <label for="points">Enter points correlating to a line:</label>
-  <input type="text" id="eq" value="0 5 1 10 2 15" />
-  <input type="submit" value="Begin Genetic Algorithm" />
-</form>
+	<form id="form">
+		<label for="points">Enter points correlating to a line:</label>
+		<input type="text" id="eq" value="0 5 1 10 2 15" />
+		<input type="submit" value="Begin Genetic Algorithm" />
+	</form>
 
-<div id="plot"></div>
+	<div id="plot"></div>
 
-<script>
+	<script>
 
-/*function draw() {
-    try {
-      // compile the expression once
-      const expression = document.getElementById('eq').value
-      const expr = math.compile(expression)
-
-      // evaluate the expression repeatedly for different values of x
-      const xValues = math.range(-10, 10, 0.01).toArray()
-      const yValues = xValues.map(function (x) {
-        return expr.eval({x: x})
-      })
-
-      // render the plot using plotly
-      const trace1 = {
-        x: xValues,
-        y: yValues,
-        type: 'scatter'
-      }
-      const data = [trace1]
-      Plotly.newPlot('plot', data)
-     }
-     catch (err) {
-	console.error(err)
-	alert(err)
-     }
-
-}*/
-
-function draw(cohort) {
-	try {
-		const data = new Array(cohort.length)
-		for (var i = 0; i < cohort.length; i++) {
-			const expression = cohort[i][0] + "x+" + cohort[i][1]
-			const expr = math.compile(expression)
-			const xValues = math.range(-10, 10, 0.01).toArray()
-			const yValues = xValues.map(function (x) {
-				return expr.eval({x: x})})
-			const trace = {
+		/*function draw() {
+			try {
+			  // compile the expression once
+			  const expression = document.getElementById('eq').value
+			  const expr = math.compile(expression)
+		
+			  // evaluate the expression repeatedly for different values of x
+			  const xValues = math.range(-10, 10, 0.01).toArray()
+			  const yValues = xValues.map(function (x) {
+				return expr.eval({x: x})
+			  })
+		
+			  // render the plot using plotly
+			  const trace1 = {
 				x: xValues,
 				y: yValues,
 				type: 'scatter'
-			}
-			data[i] = trace
-		}
-		Plotly.react('plot', data)
-		wait(2000)
-	}
-	catch (err) {
-		console.error(err)
-		alert(err)
-	}
-}
-
-function runalgorithm() {
-//	var tobj = {}
-//	tobj.genes = 
-//	tobj.somethingelse = 
-//        var tobjar = []
-//        tobjarr.append(tobj
-	var plot = document.getElementById('eq').value.split(" ")
-	var rplot = new Array(plot.length / 2)
-	for (var i = 0; i < plot.length; i+=2) {
-		var temparr = [plot[i], plot[i + 1]]
-		rplot[i / 2] = temparr
-	}
-	geneticalgorithm(3, rplot, 4, 0.5)
+			  }
+			  const data = [trace1]
+			  Plotly.newPlot('plot', data)
+			 }
+			 catch (err) {
+			console.error(err)
+			alert(err)
+			 }
 		
-}
+		}*/
 
-
-
-function geneticalgorithm(generations, plot, popsize, mutationchance) {
-	var cohort = new Array(popsize);
-	for (var i = 0; i < popsize; i++) {
-		var genes = [ Math.random() * 11 , Math.random() * 11, 0]
-		cohort[i] = genes
-		genes.fitnessScore = 0
-	}
-	//run generations
-	for (var i = 0; i < generations; i++) {
-		cohort = runGeneration(cohort, mutationchance, plot)
-		draw(cohort)
-	}
-	for (var i = 0; i < cohort.length - 1; i++) {
-		cohort[i].fitnessScore = fitnessScore(cohort[i], plot)
-	}
-	cohort.sort(function(a, b) {
-		return a.fitnessScore = b.fitnessScore})
-	bestGenes = cohort[0].genes
-}
-
-function wait(ms)
-{
-var d = new Date()
-var d2 = null
-do { d2 = new Date() }
-while(d2-d < ms)
-}		
-
-function fitnessScore(o, plot) {
-	var score = 0
-	for (var i = 0; i < plot.length; i++) {
-		score += Math.abs(o[0] * plot[i][0] + o[1] - plot[i][1])
-	}
-	return score
-}
-
-function runGeneration(cohort, mutationchance, plot) {
-	nextCohort = new Array(cohort.length)
-	for (var i = 0; i < cohort.length; i++) {
-		cohort[i].fitnessScore = fitnessScore(cohort[i], plot)
-	}
-	cohort.sort(function(a, b) {
-		return a.fitnessScore - b.fitnessScore})
-	for (var i = 0; i < cohort.length / 2; i += 2) {
-		var children = breed(cohort[i], cohort[i + 1], mutationchance)
-		nextCohort[i * 2] = children[0]
-		nextCohort[i * 2 + 1] = children[1]
-		nextCohort[i * 2 + 2] = children[2]
-		nextCohort[i * 2 + 3] = children[3]
-	}
-	return nextCohort
-}
-
-function breed(parent1, parent2, mutationchance) {
-	var children = new Array(4)
-	for (var i = 0; i < 4; i++) {	
-		var genes = new Array(2)
-		genes[0] = (parent1[0] + parent2[0]) / 2
-		var random = Math.random()
-		if (random < mutationchance) {
-			if (Math.random() < random / 2) {
-				genes[0] = Math.round(genes[0] * 1.25)
-			} else {
-				genes[0] = Math.round(genes[0] * 0.75)
+		function draw(cohort) {
+			try {
+				const data = new Array(cohort.length)
+				for (var i = 0; i < cohort.length; i++) {
+					const expression = cohort[i][0] + "x+" + cohort[i][1]
+					const expr = math.compile(expression)
+					const xValues = math.range(-10, 10, 0.01).toArray()
+					const yValues = xValues.map(function (x) {
+						return expr.eval({ x: x })
+					})
+					const trace = {
+						x: xValues,
+						y: yValues,
+						type: 'scatter'
+					}
+					data[i] = trace
+				}
+				Plotly.react('plot', data)
+				wait(2000)
 			}
-		}	
-		genes[1] = (parent1[1] + parent2[1]) / 2
-		random = Math.random()
-		if (random < mutationchance) {
-			if (Math.random() < random / 2) {
-				genes[1] = Math.round(genes[1] * 1.25)
-			} else {
-				genes[1] = Math.round(genes[1] * 0.75)
+			catch (err) {
+				console.error(err)
+				alert(err)
 			}
 		}
-		children[i] = genes
-		genes.fitnessScore = 0
-	}
-	return children	
-}
 
-	document.getElementById('form').onsubmit = function (event){
-		Plotly.newPlot('plot', null)
-		event.preventDefault()
-		runalgorithm()
-	}
-</script>
+		function draw(cohorts) {
+			try {
+				var frames = []
+				for (var i = 0; i < cohorts.length; i++) {
+					const datum = new Array(cohort.length)
+					for (var i = 0; i < cohort.length; i++) {
+						const expression = cohort[i][0] + "x+" + cohort[i][1]
+						const expr = math.compile(expression)
+						const xValues = math.range(-10, 10, 0.01).toArray()
+						const yValues = xValues.map(function (x) {
+							return expr.eval({ x: x })
+						})
+						const trace = {
+							x: xValues,
+							y: yValues,
+							type: 'scatter'
+						}
+						datum[i] = trace
+					}
+					frames.push({
+						name: i,
+						data: datum
+					})
+				}
+				var sliderSteps = []
+				var layout = {
+					xaxis: {
+						title: 'X',
+						range: [-10, 10]
+					},
+					yaxis: {
+						title: 'Y',
+						range: 'log'
+					},
+					sliders: [{
+						pad: {l: 130, t:55},
+						currentvalue: {
+						visible: true,
+						prefix: 'Generation',
+						xanchor: 'right',
+						font: {size: 20, color: '#666'}
+					},
+					steps: sliderSteps
+					}]
+				}
+				Plotly.plot('plot', {
+					data: traces,
+					layout: layout,
+					frames: frames
+				})
+			}
+			catch (err) {
+				console.error(err)
+				alert(err)
+			}
+		}
+
+		function runalgorithm() {
+			//	var tobj = {}
+			//	tobj.genes = 
+			//	tobj.somethingelse = 
+			//        var tobjar = []
+			//        tobjarr.append(tobj
+			var plot = document.getElementById('eq').value.split(" ")
+			var rplot = new Array(plot.length / 2)
+			for (var i = 0; i < plot.length; i += 2) {
+				var temparr = [plot[i], plot[i + 1]]
+				rplot[i / 2] = temparr
+			}
+			geneticalgorithm(3, rplot, 4, 0.5)
+
+		}
+
+
+
+		function geneticalgorithm(generations, plot, popsize, mutationchance) {
+			var cohort = new Array(popsize);
+			for (var i = 0; i < popsize; i++) {
+				var genes = [Math.random() * 11, Math.random() * 11, 0]
+				cohort[i] = genes
+				genes.fitnessScore = 0
+			}
+			//run generations
+			for (var i = 0; i < generations; i++) {
+				cohort = runGeneration(cohort, mutationchance, plot)
+				draw(cohort)
+			}
+			for (var i = 0; i < cohort.length - 1; i++) {
+				cohort[i].fitnessScore = fitnessScore(cohort[i], plot)
+			}
+			cohort.sort(function (a, b) {
+				return a.fitnessScore = b.fitnessScore
+			})
+			bestGenes = cohort[0].genes
+		}
+
+		function wait(ms) {
+			var d = new Date()
+			var d2 = null
+			do { d2 = new Date() }
+			while (d2 - d < ms)
+		}
+
+		function fitnessScore(o, plot) {
+			var score = 0
+			for (var i = 0; i < plot.length; i++) {
+				score += Math.abs(o[0] * plot[i][0] + o[1] - plot[i][1])
+			}
+			return score
+		}
+
+		function runGeneration(cohort, mutationchance, plot) {
+			nextCohort = new Array(cohort.length)
+			for (var i = 0; i < cohort.length; i++) {
+				cohort[i].fitnessScore = fitnessScore(cohort[i], plot)
+			}
+			cohort.sort(function (a, b) {
+				return a.fitnessScore - b.fitnessScore
+			})
+			for (var i = 0; i < cohort.length / 2; i += 2) {
+				var children = breed(cohort[i], cohort[i + 1], mutationchance)
+				nextCohort[i * 2] = children[0]
+				nextCohort[i * 2 + 1] = children[1]
+				nextCohort[i * 2 + 2] = children[2]
+				nextCohort[i * 2 + 3] = children[3]
+			}
+			return nextCohort
+		}
+
+		function breed(parent1, parent2, mutationchance) {
+			var children = new Array(4)
+			for (var i = 0; i < 4; i++) {
+				var genes = new Array(2)
+				genes[0] = (parent1[0] + parent2[0]) / 2
+				var random = Math.random()
+				if (random < mutationchance) {
+					if (Math.random() < random / 2) {
+						genes[0] = Math.round(genes[0] * 1.25)
+					} else {
+						genes[0] = Math.round(genes[0] * 0.75)
+					}
+				}
+				genes[1] = (parent1[1] + parent2[1]) / 2
+				random = Math.random()
+				if (random < mutationchance) {
+					if (Math.random() < random / 2) {
+						genes[1] = Math.round(genes[1] * 1.25)
+					} else {
+						genes[1] = Math.round(genes[1] * 0.75)
+					}
+				}
+				children[i] = genes
+				genes.fitnessScore = 0
+			}
+			return children
+		}
+
+		document.getElementById('form').onsubmit = function (event) {
+			Plotly.newPlot('plot', null)
+			event.preventDefault()
+			runalgorithm()
+		}
+	</script>
 
 </body>
+
 </html>
