@@ -173,7 +173,7 @@
 				cohort[i] = genes
 				genes.fitnessScore = 0
 			}
-			//run generations
+			//run generations for x generations
 			for (var i = 0; i < generations; i++) {
 				cohort = runGeneration(cohort, mutationchance, plot)
 				draw(cohort)
