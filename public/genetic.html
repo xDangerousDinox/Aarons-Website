@@ -153,9 +153,9 @@
 				var frames = []
 				var firstData
 				for (var i = 0; i < cohorts.length; i++) {
-					const datum = new Array(cohort.length)
-					for (var i = 0; i < cohort.length; i++) {
-						const expression = cohort[i][0] + "x+" + cohort[i][1]
+					const datum = new Array(cohorts.length)
+					for (var i = 0; i < cohorts.length; i++) {
+						const expression = cohorts[i][0] + "x+" + cohorts[i][1]
 						const expr = math.compile(expression)
 						const xValues = math.range(-10, 10, 0.01).toArray()
 						const yValues = xValues.map(function (x) {
